@@ -1,9 +1,8 @@
 package com.java.utils;
 
-import com.java.utils.filemgmt.FileOps;
+import java.nio.file.Path;
 
-import java.io.IOException;
-import java.nio.file.*;
+import com.java.utils.filemgmt.FileOps;
 
 /**
  * Hello world!
@@ -11,7 +10,6 @@ import java.nio.file.*;
  */
 public class App {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
-        FileOps.cleanEmptyFiles(Path.of("/Users/mayankmadan"), 0, ".*", ".*/node_modules/.*");
+        FileOps.cleanEmptyFiles(Path.of("/Users/mayankmadan/Downloads"), 3, ".*", ".*/node_modules/.*");
     }
 }

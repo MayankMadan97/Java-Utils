@@ -10,14 +10,12 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 public class FileOps {
-
-    public static boolean cleanEmptyFiles(Path path, int n, String include, String exclude) {
-        boolean deleteSuccess = false;
+    public static void cleanEmptyFiles(Path path, int n, String include, String exclude) {
 
         Pattern incPattern = Pattern.compile(include);
         Pattern excPattern = Pattern.compile(exclude);
 
-        if (path != null && !path.toString().isEmpty() && Files.exists(path) && Files.isDirectory(path)) {
+        if (path != null && Files.exists(path) && Files.isDirectory(path)) {
 
             try {
                 Files.walkFileTree(path, new SimpleFileVisitor<Path>() {
@@ -25,7 +23,7 @@ public class FileOps {
 
                     @Override
                     public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                        if (n != 0 && currentDepth == n) {
+                        if (currentDepth == n) {
                             return FileVisitResult.SKIP_SUBTREE; // Don't enter subdirectories beyond n levels
                         }
                         currentDepth++;
@@ -35,25 +33,30 @@ public class FileOps {
                     @Override
                     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 
-                        Matcher incMatcher = incPattern.matcher(path.toString());
-                        Matcher excMatcher = excPattern.matcher(path.toString());
-                        if (!Files.isDirectory(path) && incMatcher.matches()
-                                && !excMatcher.matches() && path.toFile().length() == 0) {
-                            System.out.println("File: " + file); // Process file
-                            System.out.println("Exclude -count: " + excMatcher.matches());
+                        if (!Files.isDirectory(file)) {
+                            String fileName = file.getFileName().toString();
+                            Matcher incMatcher = incPattern.matcher(fileName);
+                            Matcher excMatcher = excPattern.matcher(fileName);
+                            if (incMatcher.matches() && !excMatcher.matches() && file.toFile().length() == 0) {
+                                System.out.println("File to delete: " + file); // Process file (example: print file to
+                                                                               // delete)
+                                try {
+                                    Files.delete(file); // Delete the file
+                                } catch (IOException e) {
+                                    System.err.println("Failed to delete file: " + file);
+                                }
+                            }
                         }
                         return FileVisitResult.CONTINUE;
                     }
 
                 });
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
+        } else {
+            System.err.println("Path is invalid or not a directory: " + path);
         }
-
-        return deleteSuccess;
     }
-
 }
