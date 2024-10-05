@@ -1,15 +1,12 @@
 package com.java.utils;
 
-import java.nio.file.Path;
-
-import com.java.utils.filemgmt.FileOps;
-
 /**
- * Hello world!
+ * Kept here to test utility methods, will be removed once packages are
+ * published
  *
  */
 public class App {
     public static void main(String[] args) {
-        FileOps.cleanEmptyFiles(Path.of("/Users/mayankmadan/Downloads"), 3, ".*", ".*/node_modules/.*");
+        System.out.println("Utility is running");
     }
 }
