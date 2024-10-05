@@ -8,5 +8,6 @@ package com.java.utils;
 public class App {
     public static void main(String[] args) {
         System.out.println("Utility is running");
+
     }
 }
