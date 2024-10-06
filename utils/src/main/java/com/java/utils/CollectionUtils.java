@@ -1,5 +1,6 @@
 package com.java.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -75,5 +76,37 @@ public class CollectionUtils<T extends Comparable<T>> {
             }
         }
         return freqMap;
+    }
+
+    /**
+     * Splits a list into smaller lists (chunks) of a specified size.
+     *
+     * @param <T>  The type of elements in the input list.
+     * @param list The list to be chunked. Must not be null or empty.
+     * @param size The size of each chunk. Must be greater than zero.
+     * @return A list of lists containing the chunked elements.
+     * @throws IllegalArgumentException if the list is null, empty, or the size is
+     *                                  less than or equal to zero.
+     */
+    public static <T> List<List<T>> chunk(List<T> list, int size) {
+        if (list == null || list.isEmpty() || size == 0) {
+            throw new IllegalArgumentException("Invalid parameters: Either list is empty or size is 0");
+        }
+        List<List<T>> chunkedList = new ArrayList<>();
+        Iterator<T> iterator = list.iterator();
+        List<T> currentChunk = new ArrayList<>(size);
+        while (iterator.hasNext()) {
+            // If window size reached, move the chink to the list and clear current chunk
+            if (currentChunk.size() >= size) {
+                chunkedList.add(currentChunk);
+                currentChunk = new ArrayList<>(size);
+            }
+            currentChunk.add(iterator.next());
+        }
+        // Add any remaining elements in another chunk if existing
+        if (currentChunk.size() > 0) {
+            chunkedList.add(currentChunk);
+        }
+        return chunkedList;
     }
 }
