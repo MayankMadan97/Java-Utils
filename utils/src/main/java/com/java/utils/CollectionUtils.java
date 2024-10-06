@@ -1,10 +1,12 @@
 package com.java.utils;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class CollectionUtils {
+public class CollectionUtils<T extends Comparable<T>> {
 
     /**
      * Merges two maps into one. If both maps contain the same key,
@@ -45,5 +47,33 @@ public class CollectionUtils {
             }
         }
         return resultantMap;
+    }
+
+    /**
+     * Generates a frequency map of the string representations of elements in a
+     * list.
+     * The map contains each unique string representation as a key and its frequency
+     * in the list as the corresponding value.
+     *
+     * @param <T>  The type of elements in the input list.
+     * @param list A list of elements for which to generate the frequency map.
+     *             The list can contain any objects whose string representation is
+     *             meaningful.
+     *             If the list is null or empty, an empty map will be returned.
+     * @return A map where the keys are string representations of the elements in
+     *         the list and the values are their corresponding frequencies. If the
+     *         list is null or empty, an empty map is returned.
+     */
+    public static <T> Map<String, Integer> getFreqMap(List<T> list) {
+        Map<String, Integer> freqMap = new HashMap<>();
+        if (list != null && !list.isEmpty()) {
+            Iterator<T> iterator = list.iterator();
+            while (iterator.hasNext()) {
+                T elem = iterator.next();
+                String key = elem.toString();
+                freqMap.put(key, freqMap.getOrDefault(key, 0) + 1);
+            }
+        }
+        return freqMap;
     }
 }
