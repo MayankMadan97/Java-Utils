@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class CollectionUtils<T extends Comparable<T>> {
 
@@ -108,5 +111,37 @@ public class CollectionUtils<T extends Comparable<T>> {
             chunkedList.add(currentChunk);
         }
         return chunkedList;
+    }
+
+    /**
+     * Processes the elements of the provided stream in batches of the specified
+     * size.
+     * 
+     * @param stream        the stream of elements to process
+     * @param batchSize     the size of each batch; if less than 1, a default batch
+     *                      size of 5 will be used
+     * @param batchConsumer a consumer function to handle each batch of elements
+     * 
+     * @throws IllegalArgumentException if the stream or batchConsumer is null
+     */
+    public void batchProcess(Stream<T> stream, int batchSize, Consumer<List<T>> batchConsumer) {
+
+        if (stream == null || batchConsumer == null) {
+            throw new IllegalArgumentException("Provided parameters are null");
+        }
+
+        List<T> batch = new ArrayList<>(batchSize);
+        stream.filter(Objects::nonNull).forEach(elem -> {
+            batch.add(elem);
+            if (batch.size() == (batchSize < 1 ? 5 : batchSize)) {
+                batchConsumer.accept(batch);
+                batch.clear();
+            }
+        });
+
+        // execute any remaining items in the batch that didn't make the batch size
+        if (!batch.isEmpty()) {
+            batchConsumer.accept(batch);
+        }
     }
 }
