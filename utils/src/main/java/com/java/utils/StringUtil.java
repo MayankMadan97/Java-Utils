@@ -16,8 +16,8 @@ public class StringUtil {
     public static String reverse(String strToRev) {
         // Throw exception if the string parameter is null or contain only whitespaces
         if (strToRev == null || strToRev.trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "strToRev must not be null and should contain characters apart from spaces");
+            throw new IllegalArgumentException("strToRev must not be null and should contain characters apart from " +
+                    "spaces");
         }
         // If the stirng contains only 1 character, no point in reversing
         if (strToRev.length() == 1) {
@@ -42,7 +42,7 @@ public class StringUtil {
      *                 replaced
      * @param values   a map containing key-value pairs for replacement
      * @return the interpolated string with placeholders replaced by their
-     *         corresponding values
+     * corresponding values
      * @throws IllegalArgumentException if the template is null or only contains
      *                                  whitespaces
      */
@@ -68,4 +68,30 @@ public class StringUtil {
             return strBuilder.toString();
         }
     }
+
+    /**
+     * Converts a given string to Title Case.
+     * Example: "java is awesome" -> "Java Is Awesome"
+     *
+     * @param input the string to be converted
+     * @return the input string in Title Case
+     */
+    public static String convertToTitleCase(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+
+        String[] words = input.split("\\s+");
+        StringBuilder titleCase = new StringBuilder();
+
+        for (String word : words) {
+            if (word.length() > 0) {
+                titleCase.append(Character.toUpperCase(word.charAt(0)))
+                        .append(word.substring(1).toLowerCase()).append(" ");
+            }
+        }
+
+        return titleCase.toString().trim();
+    }
+
 }
